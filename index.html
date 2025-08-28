@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<!--El error de este codigo es que no llama a CalcularSueldo-->
+
+<head>
+  <title>Liquidación de sueldos celit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+
+
+
+
+</head>
+
+<body>
+  <div class="contenedor-imagen">
+    <img src="ImágenesPropias/gatocaclulator.jpg" class="imagen-gato">
+  </div>
+  <div class="contendor-botones-parrafos">
+    <div class="div-botones">
+      <button onclick="
+            iniciarLiquidacion();
+            ">
+        Clickea acá para Liquidar sueldos
+      </button>
+      <button onclick="
+            BorrarDatos();
+            ">Clickea acá para borrar</button>
+    </div>
+
+    <div class="div-párrafos">
+      <p class="salarioMensual-js"></p>
+      <p class="remuneracionDiaria-js"></p>
+      <p class="diasTrabajados-js"></p>
+      <p class="diasNoTrabajados-js"></p>
+      <p class="descuento-js"></p>
+      <p class="sueldo-js"></p>
+    </div>
+  </div>
+
+
+
+
+</body>
+<style>
+  body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    /* centra horizontalmente */
+    align-items: center;
+    /* centra verticalmente */
+    height: 100vh;
+    /* asegura que el body ocupe toda la altura de la ventana */
+    margin: 0;
+    font-family: 'Chewy', cursive;
+
+  }
+
+  .contenedor-imagen {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .imagen-gato {
+    height: 800px;
+    object-position: center;
+  }
+
+  .contendor-botones-parrafos {
+    display: flexbox;
+    margin-left: 0;
+    background-color: black;
+    color: white;
+    font-weight: bolder;
+  }
+
+  .div-botones {
+    display: block;
+
+  }
+
+  .div-párrafos {
+    padding-left: 10px;
+  }
+
+  button {
+    margin: 10px;
+
+    background: #ff7f50;
+    /* fondo naranja */
+    color: white;
+    /* letras blancas */
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Chewy', cursive;
+    border-radius: 10px;
+    box-shadow: 0 5px #d66e3b;
+    /* efecto 3D */
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background: #ffa17f;
+    box-shadow: 0 5px #d68055, 0 10px #d5835b;
+    cursor: pointer;
+
+  }
+
+  button:active {
+    background-color: #f85216;
+    box-shadow: 0 5px #fd5400, 0 10px #fd5501;
+    color: white;
+  }
+</style>
+
+
+
+
+<script>
+  function iniciarLiquidacion() {
+    //remuneracion= calcularRemuneracionDiaria();
+    //Según yo, primero va a a llamar a la función calcular remuneracion diaria y recién después, con el dato de remuneracion diaria, calcula el sueldo
+    calcularSueldo(calcularRemuneracionDiaria());
+
+  }
+
+  function calcularRemuneracionDiaria() {
+    //- Pedimos el salario mensual del empleado
+    //- controlamos que esos días sea un nº mayor a cero
+    //- calculamos el remuneración diaria
+    let salarioMensual = Number(prompt("Ingresa el salario mensual. Si el salario es decimal, marcalo con un punto. Ejemplo: 1200,5 vos lo debes ingresar como 1200.5"));
+    let remuneracionDiaria = 0;
+
+
+    if (!(Number.isFinite(salarioMensual) && salarioMensual > 0)) {
+      alert("Celi la puta madre ingresa un valor numérico mayor que cero. Si el sueldo es decimal, pone un punto")
+      //Si se ingreso un valor no natural o menor que cero(no se porque debo poner ambas condiciones) volvemos a llamar a la función
+
+      return calcularRemuneracionDiaria();
+    } else {
+      remuneracionDiaria = (salarioMensual / 30);
+      //Esto es solo para que muestre párrafos con los datos
+      document.querySelector('.salarioMensual-js').innerHTML = `Salario Mensual: $${salarioMensual.toLocaleString()}`;
+      document.querySelector('.remuneracionDiaria-js').innerHTML = `Remuneración Diaria: $${remuneracionDiaria.toLocaleString()}`;
+    }
+    return (remuneracionDiaria);
+  }
+
+  //Esta funcion es llamada con el parametro devuelto por calcularRemuneracionDiaria() que le llamamos remuneracion solo para diferenciar del usado en la funcion anterior
+  function calcularSueldo(remuneracion) {
+    //- Primero pedimos que ingrese el número de días trabajados
+    let diasTrabajados = Number(prompt("Ingrese la cantidad de días trabajados del mes :"));
+
+    //Creamos variables globales de la función para despues imprimirlas más facilmente
+    let diasNoTrabajados = 0;
+    let Sueldo = 0;
+    let Descuento = 0;
+
+    //- Controlamos que  cantidad de dias trabajdos sea un natural con isInteger, que sea un numero mayor a cero y que sea menor que 30
+    if (!(Number.isInteger(diasTrabajados) && diasTrabajados <= 30)) {
+      alert("Ingresar valor válido de días trabajados")
+      return calcularSueldo(remuneracion);//ESTA LINEA PODRIA CAUSAR ERROR. CUALQUIER COSA AGREGARLE remuneracion como parametro de vuelt
+      //Si nuestro trabajador no trabajo todos los dias del mes
+    } else if (!(diasTrabajados == 30)) {
+      //Si no se cumple esto es porque no labure los 30 dias y hay que ver si descuento o no.
+      //Primero actualizamos la cantidad de dias no trabajados porque igual lo mostraremos en pantalla
+      diasNoTrabajados = 30 - diasTrabajados;
+      //Preguntamos si queremos descontar esos dias
+      let decision = confirm("¿Desea descontar los días no trabajados?")
+      //En caso que si quiera descontarlos
+      if (decision) {
+        Sueldo = diasTrabajados * remuneracion;
+        Descuento = diasNoTrabajados * remuneracion;
+      } else {//En caso de que NO quiera descontarlos
+        Sueldo = (diasTrabajados + diasNoTrabajados) * remuneracion;
+      }
+    } else {//Si entra acá es porque los dias trabajados son 30
+      Sueldo = Math.round(diasTrabajados * remuneracion);
+    }
+    //Mostramos en pantalla resultados
+    document.querySelector('.diasTrabajados-js').innerHTML = `Días Trabajados: ${diasTrabajados}`;
+    document.querySelector('.diasNoTrabajados-js').innerHTML = `Días No Trabajados: ${diasNoTrabajados}`;
+    document.querySelector('.descuento-js').innerHTML = `Descuento por Días No Trabajados: $${Descuento.toLocaleString()}`;
+    document.querySelector('.sueldo-js').innerHTML = `Sueldo: $${Sueldo.toLocaleString()}`;
+    return;
+  }
+
+  function BorrarDatos() {
+    document.querySelector('.salarioMensual-js').innerHTML = `Salario Mensual:`;
+    document.querySelector('.remuneracionDiaria-js').innerHTML = `Remuneración Diaria:`;
+    document.querySelector('.diasTrabajados-js').innerHTML = `Días Trabajados:`;
+    document.querySelector('.diasNoTrabajados-js').innerHTML = `Días No Trabajados:`;
+    document.querySelector('.descuento-js').innerHTML = `Descuento por Días No Trabajados:`;
+    document.querySelector('.sueldo-js').innerHTML = `Sueldo:`;
+    return;
+  }
+
+</script>
+
+</html>
